@@ -1,7 +1,8 @@
 package main
 
 import (
-	"EventPublisher/docs"
+	"EventPublisher/configuration"
+	controller "EventPublisher/controller/event"
 	"flag"
 	"fmt"
 
@@ -14,20 +15,22 @@ func main() {
 
 	env := flag.String("env", "", "")
 	flag.Parse()
-	fmt.Printf("env: \"%v\"\n", string(*env))
 
-	// programmatically set swagger info
-	docs.SwaggerInfo.Title = "Event Publisher API"
-	docs.SwaggerInfo.Description = "This is a concept api to publish events."
-	docs.SwaggerInfo.Version = "0.1"
-	docs.SwaggerInfo.Host = ""
-	docs.SwaggerInfo.BasePath = "/v1"
-	docs.SwaggerInfo.Schemes = []string{"http", "https"}
+	configuration.SetSwaggerInfo()
+	config := configuration.GetConfig(string(*env))
 
-	r := gin.New()
+	r := gin.Default()
+	//r.Use(gzip.Gzip(gzip.BestSpeed))
 
-	// use ginSwagger middleware to serve the API docs
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	v1 := r.Group("/v1")
+	{
+		v1.POST("/event", controller.EventController{Configuration: config}.PostEvent)
+	}
 
-	r.Run(":5555")
+	fmt.Println(config.Port)
+	url := ginSwagger.URL("http://localhost:" + config.Port + "/swagger/doc.json") // The url pointing to API definition
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
+	r.Run(":" + config.Port)
 }
+
+//

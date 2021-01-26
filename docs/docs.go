@@ -23,7 +23,70 @@ var doc = `{
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
-    "paths": {}
+    "paths": {
+		"/v1/event": {
+			"post": {
+				"consumes": [
+					"application/json"
+				],
+				"produces": [
+					"application/json"
+				],
+				"summary": "Create a new event",
+				"parameters": [
+					{
+						"description": "Event Data",
+						"name": "message",
+						"in": "body",
+						"required": true,
+						"schema": {
+							"type": "object",
+							"$ref": "#/definitions/PublisherRequest"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "ok",
+						"schema": {
+							"type": "object",
+							"$ref": "#/definitions/PublisherResponse"
+						}
+					}
+				}
+			}
+		}
+	},
+	"definitions": {
+		"PublisherRequest": {
+			"type": "object",
+			"properties": {
+				"correlationId": {
+					"type": "string"
+				},
+				"eventId": {
+					"type": "string"
+				},
+				"eventName": {
+					"type": "string"
+				},
+				"payload": {
+					"type": "string"
+				}
+			}
+		},
+		"PublisherResponse": {
+			"type": "object",
+			"properties": {
+				"code": {
+					"type": "string"
+				},
+				"description": {
+					"type": "string"
+				}
+			}
+		}
+	}
 }`
 
 type swaggerInfo struct {
