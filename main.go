@@ -28,7 +28,7 @@ func main() {
 	}
 
 	fmt.Println(config.Port)
-	url := ginSwagger.URL("http://localhost:" + config.Port + "/swagger/doc.json") // The url pointing to API definition
+	url := ginSwagger.URL("/swagger/doc.json") // The url pointing to API definition
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
 	r.Run(":" + config.Port)
 }

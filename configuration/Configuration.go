@@ -19,6 +19,8 @@ func GetConfig(environment string) Configuration {
 		env = environment
 	}
 	fileName := fmt.Sprintf("./settings.%s.json", env)
+	fmt.Println("fileName -->" + fileName)
+
 	gonfig.GetConf(fileName, &configuration)
 	return configuration
 }
