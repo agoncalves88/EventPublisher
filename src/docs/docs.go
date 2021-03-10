@@ -46,8 +46,11 @@ var doc = `{
 					}
 				],
 				"responses": {
-					"200": {
-						"description": "ok",
+					"201": {
+						"description": "created",
+					},
+					"422": {
+						"description": "UnprocessableEntity",
 						"schema": {
 							"type": "object",
 							"$ref": "#/definitions/PublisherResponse"

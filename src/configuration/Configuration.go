@@ -9,7 +9,8 @@ import (
 )
 
 type Configuration struct {
-	Port string
+	Port          string
+	BrokerAddress string
 }
 
 func GetConfig(environment string) Configuration {
@@ -30,6 +31,6 @@ func SetSwaggerInfo() {
 	docs.SwaggerInfo.Description = "This is a concept api to publish events."
 	docs.SwaggerInfo.Version = "0.1"
 	docs.SwaggerInfo.Host = ""
-	docs.SwaggerInfo.BasePath = "/v1"
+	docs.SwaggerInfo.BasePath = ""
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 }

@@ -4,15 +4,22 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"time"
 
-	kafka "EventPublisher.Api/Infrastructure"
 	"EventPublisher.Api/configuration"
+	"EventPublisher.Api/infrastructure"
+	"EventPublisher.Api/model"
 	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
-// Controller example
+var _eventCollection = "Event"
+
 type EventController struct {
 	Configuration configuration.Configuration
+	MongoDb       *mongo.Database
+	Kafka         *infrastructure.KafkaBase
 }
 
 func (e EventController) PostEvent(c *gin.Context) {
@@ -26,12 +33,29 @@ func (e EventController) PostEvent(c *gin.Context) {
 	} else {
 
 		ctx := context.Background()
-		message, _ := json.Marshal(request)
-		go kafka.Produce(ctx, message)
 
-		c.JSON(http.StatusOK, EventResponse{
-			Code:        "200",
-			Description: "",
-		})
+		message, _ := json.Marshal(request)
+
+		err := e.Kafka.Produce(ctx, message, request.EventName)
+		var collection = e.MongoDb.Collection(_eventCollection)
+
+		defer ctx.Done()
+		if err == nil {
+			eventModel := model.EventModel{
+				ID:        primitive.NewObjectID(),
+				CreatedAt: time.Now(),
+				UpdatedAt: time.Now(),
+				Completed: false,
+			}
+
+			collection.InsertOne(ctx, eventModel)
+			c.Status(http.StatusCreated)
+		} else {
+			c.JSON(http.StatusUnprocessableEntity, EventResponse{
+				Code:        "422",
+				Description: err.Error(),
+			})
+		}
+
 	}
 }

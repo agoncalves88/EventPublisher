@@ -1,3 +1,4 @@
 {
-    "Port": "5555"
+    "Port": "5555",
+    "BrokerAddress": "localhost:9092"
 }

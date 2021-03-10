@@ -17,6 +17,7 @@ require (
 	github.com/swaggo/swag v1.7.0
 	github.com/tkanos/gonfig v0.0.0-20210106201359-53e13348de2f
 	github.com/ugorji/go v1.2.3 // indirect
+	go.mongodb.org/mongo-driver v1.5.0 // indirect
 	golang.org/x/crypto v0.0.0-20201221181555-eec23a3978ad // indirect
 	golang.org/x/net v0.0.0-20210119194325-5f4716e94777 // indirect
 	golang.org/x/sys v0.0.0-20210122093101-04d7465088b8 // indirect
