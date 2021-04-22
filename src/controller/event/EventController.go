@@ -45,6 +45,7 @@ func (e EventController) PostEvent(c *gin.Context) {
 				ID:        primitive.NewObjectID(),
 				CreatedAt: time.Now(),
 				UpdatedAt: time.Now(),
+				Payload:   request.Payload,
 				Completed: false,
 			}
 
